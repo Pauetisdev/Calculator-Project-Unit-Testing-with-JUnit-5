@@ -14,6 +14,9 @@ This project demonstrates a comprehensive testing approach for a Java calculator
 - [Mutation Testing with PIT](#mutation-testing-with-pit)
 - [Understanding the Reports](#understanding-the-reports)
 - [Best Practices](#best-practices)
+- [Additional Resources](#additional-resources)
+- [License](#license)
+
 
 ## 🎯 Overview
 
