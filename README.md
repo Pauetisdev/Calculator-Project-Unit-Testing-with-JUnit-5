@@ -1,113 +1,162 @@
-# Calculator Project — Unit Testing with JUnit 5
+# Calculator Unit & Mutation Testing Project
 
-This project contains a simple Java class `Calculator` with basic arithmetic operations 
-(addition, subtraction, multiplication, division, max, square root, positive check, and power).
+A Java calculator project demonstrating **unit testing with JUnit 4**, **code coverage with JaCoCo**, and **mutation testing with PIT**.
 
-The main objective is to **practice unit testing with JUnit 5**. Students are expected to 
-write test cases for all methods in `Calculator`, covering normal cases, boundary values, 
-and error cases (exceptions).
+## 📋 Overview
 
-## Pre-conditions to Compile and Run
+Simple calculator with basic operations (add, subtract, multiply, divide, max, square root, power) that includes comprehensive testing to ensure code quality.
 
-Before compiling and executing tests, make sure you have the following installed:
+**Testing Stack:**
+- **JUnit 4**: Unit testing framework
+- **JaCoCo**: Code coverage analysis
+- **PIT**: Mutation testing for test quality
 
-- **Java JDK 17** or higher (`java -version` should display 17 or above)
-- **Maven 3.9+** *or* **Gradle 8+** (choose one build tool)
-- An IDE such as **IntelliJ IDEA**, **VS Code (with Java extensions)**, or **Eclipse**
+## 🚀 Quick Start
 
-## Project Structure
+### Prerequisites
+- Java JDK 8+
+- Maven 3.6+
 
-```
-project-root/
- ├─ src/
- │   ├─ main/java/com/seidoropentrends/classes/Calculator.java
- │   └─ test/java/com/seidoropentrends/classes/CalculatorTest.java
- ├─ pom.xml  
-```
-
-## How to Compile and Run Tests
-
-### Using Maven
+### Run Tests
 ```bash
-mvn test
+mvn clean test
 ```
 
-The build tool will automatically download JUnit 5 and run all unit tests in the `src/test/java` folder.
-------------------------------------------------------------------------------------------------
-Mutation Testing with PIT (Java)
+### Generate Coverage Report (JaCoCo)
+```bash
+mvn clean test
+```
+View report: `target/site/jacoco/index.html`
 
-Mutation testing checks the real quality of your tests by modifying (mutating) the production code and verifying if the tests detect these changes.
+### Run Mutation Tests (PIT)
+```bash
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+View report: `target/pit-reports/YYYYMMDDHHMM/index.html`
 
-If a test fails when a mutation is applied ⇒ mutant “killed”
+## 📊 JaCoCo - Code Coverage
 
-If tests still pass ⇒ mutant “survived”  (indicates weak tests or missing cases).
+**What it does:** Measures which lines/branches of code are executed during tests.
 
-1) Prerequisites
+**Key Metrics:**
+- **Line Coverage**: % of code lines executed
+- **Branch Coverage**: % of conditional branches tested
+- **Method Coverage**: % of methods invoked
 
-Java JDK 17 or higher installed and configured in your PATH
+**Understanding Colors:**
+- 🟢 Green = Fully covered
+- 🟡 Yellow = Partially covered  
+- 🔴 Red = Not covered
 
-Maven 3.9+ or Gradle 8+
+**Target:** Aim for 80%+ coverage
 
-A project with JUnit tests that already pass successfully
+## 🧬 PIT - Mutation Testing
 
-2) Configuration
-Maven (pom.xml)
+**What it does:** Changes your code (mutations) and checks if tests catch the changes.
 
-Add the PIT plugin:
+**Why it matters:** Code coverage shows *what* code runs, but not *how well* it's tested.
 
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.pitest</groupId>
-      <artifactId>pitest-maven</artifactId>
-      <version>1.15.0</version>
-      <configuration>
-        <targetClasses>
-          <param>com.seidoropentrends.classes.*</param>
-        </targetClasses>
-        <targetTests>
-          <param>com.seidoropentrends.classes.*Test</param>
-        </targetTests>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
-
-
-pitest {
-  pitestVersion = '1.15.0'
-  targetClasses = ['com.seidoropentrends.classes.*']
-  targetTests = ['com.seidoropentrends.classes.*Test']
+**Example:**
+```java
+// Original
+public int suma(int a, int b) {
+    return a + b;
 }
 
-3) Execution
-Maven
-mvn org.pitest:pitest-maven:mutationCoverage
+// PIT mutates to:
+return a - b;
 
+// If your test doesn't assert the result, mutant SURVIVES ❌
+```
 
-4) Report Interpretation
+**Mutation Results:**
+- ✅ **KILLED** = Test caught the mutation (good!)
+- ❌ **SURVIVED** = Test missed the mutation (improve test!)
+- ⏱️ **TIMED_OUT** = Mutation caused infinite loop
+- ⚪ **NO_COVERAGE** = Code not tested
 
-After running PIT, an HTML report is generated:
+**Common Mutations:**
+- Math operators: `+` → `-`, `*` → `/`
+- Conditionals: `>` → `>=`, `==` → `!=`
+- Return values: `true` → `false`
+- Boundaries: `<` → `<=`
 
-Maven → target/pit-reports/YYYYMMDDHHMM/index.html
+**Target:** Aim for 75%+ mutation coverage
 
-The report includes:
+## 📈 Interpreting Results
 
-Killed: mutants eliminated by tests (good ✅).
+| JaCoCo Coverage | PIT Mutation Score | Diagnosis |
+|----------------|-------------------|-----------|
+| High | High | ✅ Excellent tests! |
+| High | Low | ⚠️ Tests run code but don't verify behavior |
+| Low | Low | ❌ Need more tests |
 
-Survived: mutants that survived (tests need improvement ❌).
+## 🎯 Improving Test Quality
 
-No coverage: lines not covered by tests.
+### If JaCoCo is low:
+Add more tests to cover untested code.
 
-Timed out: mutants that exceeded the maximum execution time.
+### If PIT score is low (mutants survive):
 
-5) Best Practices
+1. **Add assertions:**
+   ```java
+   // Bad
+   calculator.suma(2, 3);
+   
+   // Good  
+   assertEquals(5, calculator.suma(2, 3));
+   ```
 
-Don’t aim blindly for 100% killed mutants (some are equivalent mutants that can’t be detected).
+2. **Test boundaries:**
+   ```java
+   assertEquals(0, calculator.maxim(0, 0));
+   assertEquals(5, calculator.maxim(5, -1));
+   ```
 
-Use PIT to reveal weak spots in your test suite.
+3. **Test both branches:**
+   ```java
+   assertTrue(calculator.esPositiu(1));   // positive
+   assertFalse(calculator.esPositiu(-1)); // negative
+   ```
 
-Add tests for boundary values and error cases that were previously missing.
+4. **Test exceptions:**
+   ```java
+   @Test(expected = IllegalArgumentException.class)
+   public void testDivideByZero() {
+       calculator.divideix(5, 0);
+   }
+   ```
 
-Run mutation testing periodically (e.g., in major pull requests or CI pipelines).
+## 🔧 Configuration
 
+Both tools are configured in `pom.xml`:
+
+**JaCoCo** runs automatically with `mvn test` and generates reports in `target/site/jacoco/`.
+
+**PIT** configuration:
+```xml
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <version>1.14.4</version>
+    <configuration>
+        <targetClasses>
+            <param>com.seidoropentrends.classes.*</param>
+        </targetClasses>
+        <targetTests>
+            <param>com.seidoropentrends.classes.*</param>
+        </targetTests>
+    </configuration>
+</plugin>
+```
+
+## 📚 Resources
+
+- [JaCoCo Documentation](https://www.jacoco.org/jacoco/trunk/doc/)
+- [PIT Mutation Testing](https://pitest.org/)
+- [JUnit 4 Guide](https://junit.org/junit4/)
+
+---
+
+**Happy Testing! 🧪**
+```
