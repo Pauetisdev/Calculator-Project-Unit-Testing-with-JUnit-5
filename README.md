@@ -324,8 +324,7 @@ target/pit-reports/YYYYMMDDHHMM/index.html
 ### For Code Coverage (JaCoCo)
 1. **Don't chase 100%**: Focus on critical business logic
 2. **Exclude generated code**: DTOs, getters/setters
-3. **Review uncovered branches**: Are they reachable?
-4. **Use coverage as a guide**, not a goal
+3. **Use coverage as a guide**, not a goal
 
 ### For Mutation Testing (PIT)
 1. **Don't obsess over 100%**: Some mutants are equivalent
