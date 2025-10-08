@@ -360,23 +360,6 @@ If PIT shows survived mutants:
    assertFalse(calculator.esPositiu(-1)); // False case
    ```
 
-## 🔧 Troubleshooting
-
-### PIT Takes Too Long
-- Reduce threads: `<threads>2</threads>`
-- Target specific classes: Narrow `<targetClasses>`
-- Use `--skipTests` if tests already passed
-
-### JaCoCo Report Not Generated
-- Ensure tests are running: `mvn test`
-- Check `target/site/jacoco/` exists
-- Verify JaCoCo plugin is in `pom.xml`
-
-### Tests Pass Locally But Fail in PIT
-- PIT runs tests multiple times with mutations
-- Check for time-dependent code or randomness
-- Ensure tests are deterministic
-
 ## 📚 Additional Resources
 
 - [JaCoCo Official Documentation](https://www.jacoco.org/jacoco/trunk/doc/)
@@ -387,11 +370,6 @@ If PIT shows survived mutants:
 ## 📝 License
 
 This project is for educational purposes.
-
-## 👥 Contributors
-
-SeidorOpenTrends POC Team
-
 ---
 
 **Happy Testing! 🧪✨**
